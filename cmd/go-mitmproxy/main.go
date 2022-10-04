@@ -25,6 +25,8 @@ type Config struct {
 	dumpLevel int    // dump level
 
 	mapperDir string
+
+	upstream string
 }
 
 func loadConfig() *Config {
@@ -39,7 +41,7 @@ func loadConfig() *Config {
 	flag.IntVar(&config.dumpLevel, "dump_level", 0, "dump level: 0 - header, 1 - header + body")
 	flag.StringVar(&config.mapperDir, "mapper_dir", "", "mapper files dirpath")
 	flag.StringVar(&config.certPath, "cert_path", "", "path of generate cert files")
-	flag.Parse()
+	flag.StringVar(&config.upstream, "upstream", "", "upstream proxy for unconditionally transferring all requests to")
 
 	return config
 }
@@ -67,6 +69,7 @@ func main() {
 		StreamLargeBodies: 1024 * 1024 * 5,
 		SslInsecure:       config.ssl_insecure,
 		CaRootPath:        config.certPath,
+		Upstream:          config.upstream,
 	}
 
 	p, err := proxy.NewProxy(opts)
